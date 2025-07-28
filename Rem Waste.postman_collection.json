@@ -1,0 +1,690 @@
+{
+	"info": {
+		"_postman_id": "11ab2dc5-be00-4bcd-b64c-24dfd59240ae",
+		"name": "Rem Waste",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8340674",
+		"_collection_link": "https://www.postman.com/cloudy-desert-888452/workspace/qacetechassessment/collection/8340674-11ab2dc5-be00-4bcd-b64c-24dfd59240ae?action=share&source=collection_link&creator=8340674"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Token is returned and correct\", function () {",
+							"    pm.expect(jsonData.token).to.eql(\"QpwL5tke4Pnpja7X4\");",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"cityslicka\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/login",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login with invalid credentials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response has error message 'user not found'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"user not found\");",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"eve.holreqres.in\",\n    \"password\": \"cityicka\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/login",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Pagination is correct and values are integers\", function () {",
+							"    pm.expect(jsonData.page).to.not.be.NaN;",
+							"    pm.expect(Number.isInteger(jsonData.page)).to.be.true;",
+							"",
+							"    pm.expect(jsonData.per_page).to.not.be.NaN;",
+							"    pm.expect(Number.isInteger(jsonData.per_page)).to.be.true;",
+							"",
+							"    pm.expect(jsonData.total).to.not.be.NaN;",
+							"    pm.expect(Number.isInteger(jsonData.total)).to.be.true;",
+							"",
+							"    pm.expect(jsonData.total_pages).to.not.be.NaN;",
+							"    pm.expect(Number.isInteger(jsonData.total_pages)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response contains 6 users\", function () {",
+							"    pm.expect(jsonData.data.length).to.eql(6);",
+							"    pm.expect(Number.isInteger(jsonData.data.length)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Each user has required properties and values are not empty\", function () {",
+							"    jsonData.data.forEach(user => {",
+							"        pm.expect(user).to.have.property(\"id\").and.to.not.be.NaN;",
+							"        pm.expect(user).to.have.property(\"email\").and.to.not.be.empty;",
+							"        pm.expect(user).to.have.property(\"first_name\").and.to.not.be.empty;",
+							"        pm.expect(user).to.have.property(\"last_name\").and.to.not.be.empty;",
+							"        pm.expect(user).to.have.property(\"avatar\").and.to.not.be.empty;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Support object contains url and text\", function () {",
+							"    pm.expect(jsonData.support).to.have.property(\"url\");",
+							"    pm.expect(jsonData.support).to.have.property(\"text\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://reqres.in/api/users?page=2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users with invalid HTTP method",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const users = pm.response.json();",
+							"",
+							"pm.test(\"Should return 405 Method Not Allowed\", function () {",
+							"    pm.response.to.have.status(405);",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"User field is empty or does not exist\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"array\");",
+							"    pm.expect(jsonData.length).to.eql(0);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://reqres.in/api/users?page=3",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"const requestData = JSON.parse(pm.request.body);",
+							"",
+							"pm.test(\"Name and job match the request body\", function () {",
+							"    pm.expect(jsonData.name).to.eql(requestData.name);",
+							"    pm.expect(jsonData.job).to.eql(requestData.job);",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response has expected properties\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"name\").and.to.not.be.empty",
+							"    pm.expect(jsonData).to.have.property(\"job\").and.to.not.be.empty",
+							"    pm.expect(jsonData).to.have.property(\"id\").and.to.not.be.empty;",
+							"    pm.expect(jsonData).to.have.property(\"createdAt\").and.to.not.be.empty;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomLastName}}\",\n    \"job\": \"{{$randomJobType}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post users with invalid request body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is present\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"naming\": \"{{$randomLastName}}\",\n    \"jobs\": \"{{$randomJobType}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"const requestData = JSON.parse(pm.request.body);",
+							"",
+							"pm.test(\"Name and job match the request body\", function () {",
+							"    pm.expect(jsonData.name).to.eql(requestData.name);",
+							"    pm.expect(jsonData.job).to.eql(requestData.job);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has expected properties\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"name\").and.to.not.be.empty",
+							"    pm.expect(jsonData).to.have.property(\"job\").and.to.not.be.empty",
+							"    pm.expect(jsonData).to.have.property(\"updatedAt\").and.to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomLastName}}\",\n    \"job\": \"{{$randomJobType}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users/2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put User with non existing ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Error message for user not found\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.include(\"not found\");",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomLastName}}\",\n    \"job\": \"{{$randomJobType}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users/0",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users/2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User With Invalid ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Error message for user not found\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.include(\"not found\");",
+							"});",
+							"",
+							"pm.test(\"Response time is below 1000ms\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "reqres-free-v1"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users/0",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
