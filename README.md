@@ -1,5 +1,4 @@
-# BuildasPostman
-## API Test Automation Using Postman & Newman
+## API Test Automation Using Postman & Newman for Remwaste
 
 This repository contains a set of automated API tests written using **Postman**. These tests can be executed either via the **Postman** application or from the command line using **Newman**.
 
